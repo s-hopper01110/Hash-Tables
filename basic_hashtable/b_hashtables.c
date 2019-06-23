@@ -68,9 +68,13 @@ unsigned int hash(char *str, int max)
   All values in storage should be initialized to NULL
   (hint: look up `calloc`)
  ****/
+
+// Create Hash Table:
 BasicHashTable *create_hash_table(int capacity)
 {
-  BasicHashTable *ht;
+  BasicHashTable *ht = malloc(sizeof(BasicHashTable));
+  ht->storage = calloc(capacity, sizeof(Pair *));
+  ht->capacity = capacity;
 
   return ht;
 }
@@ -82,38 +86,100 @@ BasicHashTable *create_hash_table(int capacity)
 
   Don't forget to free any malloc'ed memory!
  ****/
+
+//Insert:
 void hash_table_insert(BasicHashTable *ht, char *key, char *value)
 {
+  //hash key using hash function
+  int hKey = hash(key, ht->capacity);
+
+  
+  if(ht->storage[hKey]){
+
+    printf("Error: Overwriting a value with a different key");
+    destroy_pair(ht->storage[hKey]);
+
+    //reseting back to NULL
+    ht->storage[hKey] = NULL;
+  }else{
+
+    ht->storage[hKey] = create_pair(key, value);
+
+  }
 
 }
+
+
 
 /****
   Fill this in.
 
   Don't forget to free any malloc'ed memory!
  ****/
+
+//Remove:
 void hash_table_remove(BasicHashTable *ht, char *key)
 {
+  //hash key using hash function
+  int hKey = hash(key, ht->capacity);
 
-}
+  if(ht->storage[hKey] != NULL){
+
+    destroy_pair(ht->storage[hKey]);
+
+    }
+
+    ht->storage[hKey] = NULL; 
+
+}     
+
+
 
 /****
   Fill this in.
 
   Should return NULL if the key is not found.
  ****/
+
+//Retrieve:
 char *hash_table_retrieve(BasicHashTable *ht, char *key)
 {
-  return NULL;
+  //hash key using hash function
+  int hKey = hash(key, ht->capacity);
+
+  if(ht->storage[hKey] != NULL){
+
+    return ht->storage[hKey]->value;
+
+  }else{
+
+    return NULL;
+
+  }
 }
+
+
 
 /****
   Fill this in.
 
   Don't forget to free any malloc'ed memory!
  ****/
+
+//Destroy:
 void destroy_hash_table(BasicHashTable *ht)
 {
+  for(int x = 0; x < ht->capacity; x++){
+
+    if (ht->storage[x] != NULL){
+
+      destroy_pair(ht->storage[x]);
+
+    }
+  }
+
+  free(ht->storage);
+  free(ht);
 
 }
 
